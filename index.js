@@ -41,12 +41,18 @@ app.post("/convert", (req, res) => {
       Tesseract.recognize(
         data,
         'eng',
-        { logger: m => console.log(m) }
+        { tessjs_create_pdf:"1" }
       ).then(({ data: { text } }) => {
-        res.send('index',{data:text})
+        // res.redirect('/downloads');
+        console.log(text)
       })
     });
   });
+});
+
+app.get('/downloads',(req,res) => {
+    const file = `${__dirname}/`
+    res.download(file);
 });
 
 // server listenning
