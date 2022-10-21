@@ -1,0 +1,21 @@
+{
+  "name": "pdf_app",
+  "version": "0.0.1",
+  "description": "This an aplication to convert pdf file to text and image",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node app",
+    "dev": "NODE_ENV=development nodemon app"
+  },
+  "author": "Ashab Uddin",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "tesseract.js": "^3.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
