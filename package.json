@@ -4,8 +4,8 @@
   "description": "This an aplication to convert pdf file to text and image",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node app",
-    "dev": "NODE_ENV=development nodemon app"
+    "start": "node app",
+    "dev": "nodemon app"
   },
   "author": "Ashab Uddin",
   "license": "ISC",

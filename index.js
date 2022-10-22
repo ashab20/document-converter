@@ -37,10 +37,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/convert", (req, res) => {
-  // if(!req){
-  //   res.sendStatus(400);
-  //   res.end()
-  // }
+  if(req.file === null){
+    res.redirect('/');
+  }
   uploads(req, res, (err) => {
     fs.readFile(`./uploads/${req.file.originalname}`, async (err, data) => {
       if (err) return console.log(`Error: `, err);
@@ -60,7 +59,7 @@ app.post("/convert", (req, res) => {
             res.end();
           })
           .catch((err) => {
-            console.log(err);
+            res.redirect('/')
           });
       }
     });
