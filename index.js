@@ -1,7 +1,10 @@
 const express = require("express");
 const fs = require("fs");
 const multer = require("multer");
+// get text from image
 const Tesseract = require("tesseract.js");
+// get text from pdf
+const pdfParse = require("pdf-parse");
 
 const app = express();
 // const worker = createWorker({
@@ -26,7 +29,7 @@ const uploads = multer({
 }).single("convertingFile");
 
 app.set("view engine", "ejs");
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // setup routes
 app.get("/", (req, res) => {
@@ -34,25 +37,34 @@ app.get("/", (req, res) => {
 });
 
 app.post("/convert", (req, res) => {
+  // if(!req){
+  //   res.sendStatus(400);
+  //   res.end()
+  // }
   uploads(req, res, (err) => {
-    fs.readFile(`./uploads/${req.file.originalname}`,async (err, data) => {
+    fs.readFile(`./uploads/${req.file.originalname}`, async (err, data) => {
       if (err) return console.log(`Error: `, err);
-
-      Tesseract.recognize(
-        data,
-        'eng',
-        { tessjs_create_pdf:"1" }
-      ).then(({ data: { text } }) => {
-        // res.redirect('/downloads');
-        console.log(text)
-      })
+      if (req.file.mimetype === "application/pdf") {
+        pdfParse(data).then((result) => {
+          res.render("convert", { data: result.text.trimStart() });
+          res.end();
+        });
+      }
+      if (
+        req.file.mimetype == "image/png" ||
+        req.file.mimetype == "image/jpeg"
+      ) {
+        Tesseract.recognize(data, "eng", { tessjs_create_pdf: "1" })
+          .then(({ data: { text } }) => {
+            res.render("convert", { data: text });
+            res.end();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     });
   });
-});
-
-app.get('/downloads',(req,res) => {
-    const file = `${__dirname}/`
-    res.download(file);
 });
 
 // server listenning
